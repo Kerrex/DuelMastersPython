@@ -4,6 +4,7 @@ import tornado.websocket
 
 import dispatcher
 import handler_service
+from incorrect_action_error import IncorrectActionError
 from player import Player
 from player import players
 from room import Room
@@ -28,5 +29,8 @@ class ServerHandler(tornado.websocket.WebSocketHandler):
         players[self] = new_player
 
     def on_message(self, message):
-        msg = json.loads(message)
-        dispatcher.dispatch_message(self, msg)
+        try:
+            msg = json.loads(message)
+            dispatcher.dispatch_message(self, msg)
+        except IncorrectActionError:
+            self.write_message({"msg_id": -1})

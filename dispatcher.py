@@ -26,14 +26,17 @@ def move(player, card, move_to):
 
 
 def dispatch_message(handler, message):
-    if player.players.get(handler) != player.players.get(handler).room.current_player:
+    this_player = player.players.get(handler)
+    current_player = this_player.room.current_player
+    opponent = this_player.room.get_opponent(this_player)
+    if this_player != current_player:
         raise IncorrectActionError('NOT THIS PLAYER TURN')
     elif message["msg_id"] == END_OF_TURN:
-        player.players.get(handler).end_of_turn()
+        this_player.end_of_turn()
     elif message["msg_id"] == ATTACK:
-        player.players.get(handler).attack(message["card_id"], message["target_id"])
+        this_player.attack(this_player.get_card_by_id(message["card_id"]), opponent.get_card_by_id["target_id"])
     elif message["msg_id"] == MOVE:
-        move(player.players.get(handler), message["card_id"], message["move_to"])
+        move(player.players.get(handler), this_player.get_card_by_id(message["card_id"]), message["move_to"])
     else:
         raise IncorrectActionError('Incorrect action')
 
