@@ -26,6 +26,7 @@ class ServerHandler(tornado.websocket.WebSocketHandler):
             room.player_two = new_player
             new_player.room = room
             room.current_player = room.player_one
+            room.start_game()
         players[self] = new_player
 
     def on_message(self, message):
@@ -34,3 +35,12 @@ class ServerHandler(tornado.websocket.WebSocketHandler):
             dispatcher.dispatch_message(self, msg)
         except IncorrectActionError:
             self.write_message({"msg_id": -1})
+
+application = tornado.web.Application([
+                (r"/", ServerHandler),
+])
+
+
+if __name__ == "__main__":
+        application.listen(12345)
+        tornado.ioloop.IOLoop.current().start()

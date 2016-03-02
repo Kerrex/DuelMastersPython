@@ -8,3 +8,7 @@ class Room:
         if self.player_one == player:
             return self.player_two
         else: return self.player_one
+
+    def start_game(self):
+        self.player_one.handler_service.handler.write_message({"message": "player one started game"})
+        self.player_two.handler_service.handler.write_message({"message": "player two started game"})
